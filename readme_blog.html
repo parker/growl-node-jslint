@@ -1,0 +1,426 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
+
+<head profile="http://gmpg.org/xfn/11">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<title>Continuous Code Validation using JSLint  | Frontend Force Blog</title>
+
+<link rel="stylesheet" href="http://blog.frontendforce.com/wp-content/themes/newsense/style.css" type="text/css" media="screen" />
+<link rel="pingback" href="http://blog.frontendforce.com/xmlrpc.php" />
+
+<link rel="shortcut icon" href="/favicon.png" type="image/x-icon">
+
+<link href="http://blog.frontendforce.com/wp-content/themes/newsense/styles/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="http://blog.frontendforce.com/wp-content/themes/newsense/script/jquery.min2.js"></script>
+<script type="text/javascript" src="http://blog.frontendforce.com/wp-content/themes/newsense/script/supersleight.js"></script>
+<script type="text/javascript" src="http://blog.frontendforce.com/wp-content/themes/newsense/script/script.js"></script>
+
+<!--[if lte IE 6]>
+<script type="text/javascript" src="script/supersleight.js"></script>
+<link href="http://blog.frontendforce.com/wp-content/themes/newsense/styles/style_ie6.css" rel="stylesheet" type="text/css" />  
+<![endif]-->
+
+<link rel="alternate" type="application/rss+xml" title="Frontend Force Blog &raquo; Feed" href="http://blog.frontendforce.com/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Frontend Force Blog &raquo; Comments Feed" href="http://blog.frontendforce.com/comments/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Frontend Force Blog &raquo; Continuous Code Validation using JSLint Comments Feed" href="http://blog.frontendforce.com/2010/06/continuous-code-validation-using-jslint/feed/" />
+<script type='text/javascript' src='http://blog.frontendforce.com/wp-includes/js/jquery/jquery.js?ver=1.3.2'></script>
+<script type='text/javascript' src='http://blog.frontendforce.com/wp-content/plugins/google-analyticator/external-tracking.min.js?ver=6.1'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://blog.frontendforce.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://blog.frontendforce.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='index' title='Frontend Force Blog' href='http://blog.frontendforce.com' />
+<link rel='start' title='Unit Testing in JavaScript. Introduction' href='http://blog.frontendforce.com/2010/03/unit-testing-in-javascript-part-one-introduction/' />
+<link rel='prev' title='jQuery vs MooTools Nightly Benchmark' href='http://blog.frontendforce.com/2010/05/jquery-vs-mootools-nightly-benchmark/' />
+<meta name="generator" content="WordPress 2.9.2" />
+
+<!-- All in One SEO Pack 1.6.10.2 by Michael Torbert of Semper Fi Web Design[307,383] -->
+<meta name="description" content="Callbacks are often found in JavaScript code. Some say 'They are inconvenient and make code harder to understand'. Actually, it is a matter of habit and JS" />
+<meta name="keywords" content="jslint,nodejs,validation" />
+<link rel="canonical" href="http://blog.frontendforce.com/2010/06/continuous-code-validation-using-jslint/" />
+<!-- /all in one seo pack -->
+<link rel="stylesheet" href="http://disqus.com/stylesheets/frontendforceblog/disqus.css?v=2.0" type="text/css" media="screen" /><script type="text/javascript" src="http://blog.frontendforce.com/wp-content/plugins/highlight/highlight.pack.js"></script>
+<script type="text/javascript">hljs.initHighlightingOnLoad('html', 'css', 'js');</script>
+<link rel="stylesheet" href="http://blog.frontendforce.com/wp-content/plugins/highlight/styles/default.css" />
+<!-- Google Analytics Tracking by Google Analyticator 6.1: http://ronaldheft.com/code/analyticator/ -->
+<script type="text/javascript">
+	var analyticsFileTypes = [''];
+	var analyticsEventTracking = 'enabled';
+</script>
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-6897030-3']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+</head>
+<body class="single postid-245">
+
+<div id="mainContainer">
+  <div id="center">
+    <!--logo-->
+    <!--menu-->
+    <div id="menuContainer">
+      <div id="logoContainer"><a href="/"><img src="http://blog.frontendforce.com/wp-content/themes/newsense/images/logo.png" alt="logo" /></a></div>
+      <div id="menu">
+        <ul>
+          <li id="selected"><a href="http://blog.frontendforce.com/">Blog</a></li>
+          <li><a href="http://frontendforce.com/">Services</a></li>    
+          <li><a href="http://frontendforce.com/contact">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <!--header-->
+    <div id="headerPage">
+      <div id="headerSpacer"></div>
+    </div>
+    <!--content-->
+    <div id="content">
+      <div id="contentContainer">
+        <div class="contentTextHolder">
+
+	
+					<h2><a href="http://blog.frontendforce.com/2010/06/continuous-code-validation-using-jslint/">Continuous Code Validation using JSLint</a></h2>
+			<hr />
+			<div class="contentText">
+				<p><img src="http://www.ubuntu-pics.de/bild/84027/screen03_eaRAA8.jpg" alt="" /></p>
+<p>Callbacks are often found in JavaScript code. Some say &#8216;They are inconvenient and make code harder to understand&#8217;. Actually, it is a matter of habit and JS code may be as readable and easy to understand as any other. Additionally, this approach of coding allow us to &#8216;release&#8217; program flow. No function is waiting for another&#8217;s result. Everything goes like stream.</p>
+<p>Few month ago there was buzz around Node.js: Google&#8217;s V8 JavaScript engine acting as server. Before that nobody thought about event-based programming on server side. Every I/O operation in Node.js is asynchronous (database queries, reading from file or fetching content of some webpage). These are all the time used in web applications, especially real-time ones. Besides, lightweight and high-performance <a href="http://nginx.org/">Nginx</a> server is using event model.</p>
+<p>There is enough articles about Node.js functioning. Today, I&#8217;ll show how to create real application that is checking in continuous way if our code project in <a href="http://www.jslint.com">JSLint</a> by <a href="http://www.JSLint.com/lint.html">Douglas Crockford</a>. All with growl notifications.</p>
+<p><span id="more-245"></span></p>
+<h3>Node.js installation</h3>
+<p>Firsty, download and unzip the newest version of Node.js from GitHub.</p>
+<p>Sadly, Node.js doesn&#8217;t support Windows: you must use Virtual Machine.</p>
+<p>If you&#8217;re on Mac OS x, Linux or FreeBSD type this into console:</p>
+<pre><code>&gt; git clone http://github.com/ry/node.git
+&gt; cd node
+&gt; ./configure
+&gt; make
+&gt; sudo make install</code></pre>
+<p>It will install Node.js on your machine. Check if everything works:</p>
+<pre><code>&gt; echo "require('sys').puts('Hello world');" &gt; test.js
+&gt; node test.js</code></pre>
+<p>If you see Hello World message, well done.</p>
+<h3>Creating project</h3>
+<p>Growl integration is boring &#8211; we&#8217;ll use one of <a href="http://wiki.github.com/ry/node/modules">many</a> modules for Node.js. We&#8217;ll also need JSLint and two icons to make notification beautiful.</p>
+<pre><code>mkdir grolint
+cd grolint
+wget http://www.jslint.com/jslint.js
+wget http://github.com/visionmedia/node-growl/raw/master/lib/growl.js
+wget -O no.png http://imgur.com/Jq7TC.png
+wget -O ok.png http://i.imgur.com/uihIH.png</code></pre>
+<p>In Node.js external files are included using require() function that returns object of global functions and variables in included file. In fact that object is equal to the <strong>exports</strong> object in included file. So if we want use JSLINT function from jslint.js file, we have to add one line at the end:</p>
+<pre>echo "exports.check = JSLINT;" &gt;&gt; jslint.js</pre>
+<p>We&#8217;ll also use built-in <strong>sys</strong>, <strong>fs</strong>, <strong>path</strong> and <strong>child_process</strong> modules. Sys is responsible for I/O with console, fs is acronym of File System and <strong>child_process</strong> allows us to run other console applications (Growl in our case).</p>
+<p>Let&#8217;s create grolint.js file and write some first lines:</p>
+<pre><code>var sys = require('sys'),
+    fs = require('fs'),
+    path = require('path'),
+    growl = require('growl'),
+    jslint = require('./jslint');
+</code></pre>
+<p>Note that if we include non-internal module, we add ./ at the beginning of the relative path and we don&#8217;t add &#8220;.js&#8221; at the end. You may check if everything&#8217;s OK: place this at end of file and run <strong>node grolint.js </strong>command:</p>
+<pre><span style="font-family: monospace;">sys.puts(sys.inspect(jslint));</span></pre>
+<p>You should see something like:</p>
+<pre>{ check: 
+   { [Function]
+     data: [Function]
+   , report: [Function]
+   , jslint: [Circular]
+   , edition: '2010-04-06'
+   }
+}</pre>
+<h3>Application body</h3>
+<p>Our application will do two things:</p>
+<ol>
+<li>At the beginning validate all .js files in current directory against JSLint</li>
+<li>Watch for changes in every mentioned file and validate continuously</li>
+</ol>
+<p>The first thing is validating single file.</p>
+<pre><code>function validate(filename, callback) {
+    sys.print('Checking ' + filename.replace(__dirname + '/', '') + '... ');
+    fs.readFile(filename, 'utf8', function(err, file) {
+        callback(jslint.check(file.replace(/^\#\!.*/, '')));
+    });
+}</code></pre>
+<p>We created function validate in which we call fs.readFile that asynchronously reads the entire contents of a file. Second argument is encoding &#8211; binary, ascii or utf8. Third function is callback &#8211; and that&#8217;s beauty of Node.js. In PHP we would wait for contents of the file. Here interpreter continues working and when the file is loaded it will be passed as argument to callback function.</p>
+<p>JSlint.check checks given JavaScript source and returns true/false depending on whether it validates. If no, errors are stored in jslint.checks.errors array.</p>
+<p>Now, we need callback function that tells developer whether and what&#8217;s wrong:</p>
+<pre><code>function status(ok) {
+    if(ok) {
+        sys.puts("all right");
+    } else {
+        var errors = jslint.check.errors;
+        sys.puts(errors.length + ' errors');
+        for (var i = 0; i &lt; errors.length; i += 1) {
+            if (errors[i]) {
+                sys.puts(' ' + errors[i].line + ': ' + errors[i].reason);
+            }
+        }
+    }
+}</code></pre>
+<p>We want also similar function but with growl notifications. It will alert developer if something&#8217;s wrong in saved file:</p>
+<pre><code>function status_and_growl(ok) {
+    if(!ok) {
+        growl.notify(jslint.check.errors.length + ' errors (check console)');
+    }
+    status(ok);
+}</code></pre>
+<p>Next. Notice we want to process every .js file in current directory and subdirectories. To accomplish that, we need function that walks a directory recursively and call specific function on each JavaScript file. Here&#8217;s source:</p>
+<pre><code>function walk(filename, callback){
+    fs.stat(filename, function(err, stats) {
+        if(stats.isFile() &amp;&amp; filename.match(/\.js$/)) {
+            // Filename - do callback
+            callback(filename);
+        } else if(stats.isDirectory()) {
+            // Directory - walk recursive
+            fs.readdir(filename, function(err, files) {
+                for(var i = 0; i &lt; files.length; i++) {
+                    walk(filename + '/' + files[i], callback);
+                }
+            });
+        }
+    });
+}</code></pre>
+<p>fs.stat checks stats (e.g. type or size) and passes it to callback function. If given filename is actually directory, we iterate through all files and recursively call function itself. If filename is JavaScript file, we pass it to callback function (in out case it will be <strong>validate</strong>).</p>
+<p>Now we have all needed functions. What remains is call walk function on current directory (stored in predefined __directory variable) and use fs.watchFile function which watch for changes in particular file:</p>
+<pre><code>walk(__dirname, function(filename) {
+    // Check each file at the beginning
+    validate(filename, status);
+
+    // Watch every JS file for changes
+    fs.watchFile(filename, function(curr, prev) {
+        if(curr !== prev) {
+            validate(filename, status_and_growl);
+        }
+    });
+});</code></pre>
+<p>There are two arguments in watchFile&#8217;s callback function: current and previous modification time. Why curr !== prev? This is a documentation bug, watchFile also triggers when a file is accessed, not just when it&#8217;s changed. We need to test modification time.</p>
+<p>That&#8217;s it. Run code with &#8220;node grolint.js&#8221; and enjoy. You may optionally add grolint directory to PATH for further use.</p>
+<p>You may find whole code <a href="http://pastie.org/1005494">here</a>.</p>
+<table cellspacing="0" cellpadding="0" border="0" style="width: 300px; height: 50px; text-align: left; margin-left: auto; margin-right: auto;">
+<tbody>
+<tr>
+<td style="text-align: center;">
+				<a href="http://del.icio.us/post?url=http://blog.frontendforce.com/2010/06/continuous-code-validation-using-jslint/&#038;title=Continuous Code Validation using JSLint" rel="nofollow"><br />
+				<img src="http://blog.frontendforce.com/wp-content/plugins/addtothis/delicious.png" alt="Add to Del.cio.us" style="border: 0px solid ; width: 48px; height: 48px;"/><br />
+				</a>
+				</td>
+<td style="text-align: center;">
+				<a href="http://blog.frontendforce.com/feed/rss/" rel="nofollow"><br />
+				<img src="http://blog.frontendforce.com/wp-content/plugins/addtothis/feeds.png" alt="RSS Feed" style="border: 0px solid ; width: 48px; height: 48px;"/><br />
+				</a>
+				</td>
+<td style="text-align: center;">
+				<a href="http://technorati.com/faves?add=http://blog.frontendforce.com/2010/06/continuous-code-validation-using-jslint/" rel="nofollow"><br />
+				<img src="http://blog.frontendforce.com/wp-content/plugins/addtothis/technorati.png" alt="Add to Technorati Favorites" style="border: 0px solid ; width: 48px; height: 48px;"/><br />
+				</a>
+				</td>
+<td style="text-align: center;">
+				<a href="http://www.stumbleupon.com/submit?url=http://blog.frontendforce.com/2010/06/continuous-code-validation-using-jslint/&#038;title=Continuous Code Validation using JSLint" rel="nofollow"><br />
+				<img src="http://blog.frontendforce.com/wp-content/plugins/addtothis/stumble.png" alt="Stumble It!" style="border: 0px solid ; width: 48px; height: 48px;"/><br />
+				</a></p>
+</td>
+<td style="text-align: center;">
+				<a href="http://digg.com/submit?phase=2&#038;url=http://blog.frontendforce.com/2010/06/continuous-code-validation-using-jslint/" rel="nofollow"><br />
+				<img src="http://blog.frontendforce.com/wp-content/plugins/addtothis/digg.png" alt="Digg It!" style="border: 0px solid ; width: 48px; height: 48px;"/><br />
+				</a></p>
+</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td style="text-align: right;" ><a href="http://www.sajithmr.com"><img style="border:none" src="http://blog.frontendforce.com/wp-content/plugins/addtothis/sajithmr.png"  title="Powered By Sajithmr.com" alt="www.sajithmr.com"/></a></td>
+</tr>
+</tbody>
+</table>
+			</div>
+            <div class="postInfo">
+                <p>June 15, 2010 in <a href="http://blog.frontendforce.com/category/guides/" title="View all posts in Guides" rel="category tag">Guides</a>,  <a href="http://blog.frontendforce.com/category/javascript/" title="View all posts in JavaScript" rel="category tag">JavaScript</a>,  <a href="http://blog.frontendforce.com/category/programming/" title="View all posts in Programming" rel="category tag">Programming</a>,  <a href="http://blog.frontendforce.com/category/server-side/" title="View all posts in Server Side" rel="category tag">Server Side</a> | <a href="http://blog.frontendforce.com/2010/06/continuous-code-validation-using-jslint/#comments" title="Comment on Continuous Code Validation using JSLint"><span class="dsq-postid-245">View Comments</span></a></a></p>
+            </div>
+            <br />
+				  
+<div id="disqus_thread">
+	<div id="dsq-content">
+		<ul id="dsq-comments">
+			<li id="dsq-comment-181849883">
+				<div id="dsq-comment-header-181849883" class="dsq-comment-header">
+					<cite id="dsq-cite-181849883">
+						<a id="dsq-author-user-181849883" href="http://twitter.com/feedel" target="_blank" rel="nofollow">Jakub Kułak</a>
+					</cite>
+				</div>
+				<div id="dsq-comment-body-181849883" class="dsq-comment-body">
+					<div id="dsq-comment-message-181849883" class="dsq-comment-message">You can replace __dirname with process.cwd() to get current working directory, and run it like:<br><br>Host:directory/you/want/to/test $ node path/to/grolint.js<br><br>Or make an alias alias grolint="node path/to/grolint.js" and run it like:<br><br>Host:directory/you/want/to/test $ grolint</div>
+				</div>
+			</li>
+			<li id="dsq-comment-181732233">
+				<div id="dsq-comment-header-181732233" class="dsq-comment-header">
+					<cite id="dsq-cite-181732233">
+						<span id="dsq-author-user-181732233">Robak Naziemny</span>
+					</cite>
+				</div>
+				<div id="dsq-comment-body-181732233" class="dsq-comment-body">
+					<div id="dsq-comment-message-181732233" class="dsq-comment-message">__dirname seems to point to grolint.js directory, so it&#39;s impossible to run tests on other directories.</div>
+				</div>
+			</li>
+			<li id="dsq-comment-161982162">
+				<div id="dsq-comment-header-161982162" class="dsq-comment-header">
+					<cite id="dsq-cite-161982162">
+						<a id="dsq-author-user-161982162" href="http://twitter.com/IndritSelimi" target="_blank" rel="nofollow">Indrit</a>
+					</cite>
+				</div>
+				<div id="dsq-comment-body-161982162" class="dsq-comment-body">
+					<div id="dsq-comment-message-161982162" class="dsq-comment-message">Yes It rocks! The article is clear and immediate (just a very little typo on html: require(&#39;growl&#39;) instead of require(&#39;./growl&#39;)).<br>Thank you very much, you have resolved me a big problem.</div>
+				</div>
+			</li>
+			<li id="dsq-comment-128215437">
+				<div id="dsq-comment-header-128215437" class="dsq-comment-header">
+					<cite id="dsq-cite-128215437">
+						<span id="dsq-author-user-128215437">Datalion</span>
+					</cite>
+				</div>
+				<div id="dsq-comment-body-128215437" class="dsq-comment-body">
+					<div id="dsq-comment-message-128215437" class="dsq-comment-message">Hello,<br><br>Yeah, verynice tools. I want to minify my js script, but it&#39;s prefered to use optizer such as jslint befor minifiing it. So I use this type on my project.<br><br>But, the validation process is not complete.<br>I’m means that I didn’t find any way to add some libraries to check fr optimization.<br>I’m using prototypejs on all my scripts so execute jslint on all script, so I have plenty of errors :<br>some are due to my fault<br>some are due to ‘inimplemented function’ (for example, $ is a prototypejs function) so not implemented)<br></div>
+				</div>
+			</li>
+			<li id="dsq-comment-123589246">
+				<div id="dsq-comment-header-123589246" class="dsq-comment-header">
+					<cite id="dsq-cite-123589246">
+						<a id="dsq-author-user-123589246" href="http://www.af-design.com" target="_blank" rel="nofollow">Erik Giberti</a>
+					</cite>
+				</div>
+				<div id="dsq-comment-body-123589246" class="dsq-comment-body">
+					<div id="dsq-comment-message-123589246" class="dsq-comment-message">Thanks for this excellent post. I was able to get this up and running and part of my validation process in a deploy script very quickly. One note: consider re-writing this function slightly to make the output more meaningful for single run validations:<br><br>function validate(filename, callback) {<br>    fs.readFile(filename, &#39;utf8&#39;, function(err, file) {<br>        sys.print(&#39;Checking &#39; + filename.replace(__dirname + &#39;/&#39;, &#39;&#39;) + &#39;... &#39;);<br>        callback(jslint.check(file.replace(/^\#\!.*/, &#39;&#39;)));<br>    });<br>}<br><br>Also, be aware that jslint doesn&#39;t like validating itself :P it catches two errors in the current edition, dated 2010-12-23.</div>
+				</div>
+			</li>
+			<li id="dsq-comment-96898730">
+				<div id="dsq-comment-header-96898730" class="dsq-comment-header">
+					<cite id="dsq-cite-96898730">
+						<a id="dsq-author-user-96898730" href="http://philrathe.com" target="_blank" rel="nofollow">Philippe Rathé</a>
+					</cite>
+				</div>
+				<div id="dsq-comment-body-96898730" class="dsq-comment-body">
+					<div id="dsq-comment-message-96898730" class="dsq-comment-message">I&#39;ve used your recursive walk function in my project.<br>Thanks!</div>
+				</div>
+			</li>
+		</ul>
+	</div>
+</div>
+
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+<script type="text/javascript" charset="utf-8">
+	var disqus_url = 'http://blog.frontendforce.com/2010/06/continuous-code-validation-using-jslint/ ';
+	var disqus_container_id = 'disqus_thread';
+	var facebookXdReceiverPath = 'http://blog.frontendforce.com/wp-content/plugins/disqus-comment-system/xd_receiver.htm';
+</script>
+
+<script type="text/javascript" charset="utf-8">
+	var DsqLocal = {
+		'trackbacks': [
+		],
+		'trackback_url': 'http://blog.frontendforce.com/2010/06/continuous-code-validation-using-jslint/trackback/'
+	};
+</script>
+
+<script type="text/javascript" charset="utf-8">
+(function() {
+	var dsq = document.createElement('script');
+	dsq.type = 'text/javascript';
+	dsq.async = true;
+	dsq.src = "http://frontendforceblog.disqus.com/disqus.js?v=2.0&slug=continuous_code_validation_using_jslint&pname=wordpress&pver=2.33";
+	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+ 
+	</div></div>
+
+		<div id="sidebar">
+            <div class="sidebarTitle">
+              <p>Subscribe updates</p>
+            </div>
+            <div class="sidebarMenu" style="text-align: center;">
+                <a href="http://blog.frontendforce.com/feed/" style="text-decoration: none"><img src="http://blog.frontendforce.com/wp-content/themes/newsense/images/subscribe.png" style="vertical-align: middle"/><span style="padding-left: 10px;">Add feed to your reader</span></a>
+            </div>
+			<div class="sidebarTitle"><p>Do you like it?</p></div><div class="sidebarMenu">			<div class="textwidget"><script type="text/javascript">
+tweetmeme_style = 'compact';
+</script>
+<script type="text/javascript" src="http://tweetmeme.com/i/scripts/button.js"></script><iframe src="http://www.facebook.com/widgets/like.php?href=http://blog.frontendforce.com"
+        scrolling="no" frameborder="0"
+        style="border:none; width:180px; height:26px"></iframe>
+</div>
+		</div>				<div class="sidebarTitle"><p>Recent Posts</p></div><div class="sidebarMenu">		<ul>
+				<li><a href="http://blog.frontendforce.com/2010/06/continuous-code-validation-using-jslint/" title="Continuous Code Validation using JSLint">Continuous Code Validation using JSLint </a></li>
+				<li><a href="http://blog.frontendforce.com/2010/05/jquery-vs-mootools-nightly-benchmark/" title="jQuery vs MooTools Nightly Benchmark">jQuery vs MooTools Nightly Benchmark </a></li>
+				<li><a href="http://blog.frontendforce.com/2010/05/unit-testing-in-javascript-selenium/" title="Unit Testing in JavaScript: Selenium">Unit Testing in JavaScript: Selenium </a></li>
+				<li><a href="http://blog.frontendforce.com/2010/05/javascript-oddities-explained-comparing/" title="JavaScript oddities explained. Comparing.">JavaScript oddities explained. Comparing. </a></li>
+				<li><a href="http://blog.frontendforce.com/2010/05/mobile-application-development-using-javascript/" title="Mobile Application Development using JavaScript">Mobile Application Development using JavaScript </a></li>
+				</ul>
+		</div><div class="sidebarTitle"><p>Categories</p></div><div class="sidebarMenu">		<ul>
+	<li class="cat-item cat-item-43"><a href="http://blog.frontendforce.com/category/benchmarks/" title="View all posts filed under Benchmarks">Benchmarks</a>
+</li>
+	<li class="cat-item cat-item-11"><a href="http://blog.frontendforce.com/category/games/" title="View all posts filed under Games">Games</a>
+</li>
+	<li class="cat-item cat-item-36"><a href="http://blog.frontendforce.com/category/good-to-know/" title="View all posts filed under Good to know">Good to know</a>
+</li>
+	<li class="cat-item cat-item-6"><a href="http://blog.frontendforce.com/category/guides/" title="View all posts filed under Guides">Guides</a>
+</li>
+	<li class="cat-item cat-item-27"><a href="http://blog.frontendforce.com/category/html5/" title="View all posts filed under HTML5">HTML5</a>
+</li>
+	<li class="cat-item cat-item-5"><a href="http://blog.frontendforce.com/category/javascript/" title="View all posts filed under JavaScript">JavaScript</a>
+</li>
+	<li class="cat-item cat-item-25"><a href="http://blog.frontendforce.com/category/jquery/" title="View all posts filed under jQuery">jQuery</a>
+</li>
+	<li class="cat-item cat-item-30"><a href="http://blog.frontendforce.com/category/mobile-development/" title="View all posts filed under Mobile Development">Mobile Development</a>
+</li>
+	<li class="cat-item cat-item-26"><a href="http://blog.frontendforce.com/category/mootools/" title="View all posts filed under MooTools">MooTools</a>
+</li>
+	<li class="cat-item cat-item-3"><a href="http://blog.frontendforce.com/category/programming/" title="View all posts filed under Programming">Programming</a>
+</li>
+	<li class="cat-item cat-item-45"><a href="http://blog.frontendforce.com/category/server-side/" title="View all posts filed under Server Side">Server Side</a>
+</li>
+	<li class="cat-item cat-item-4"><a href="http://blog.frontendforce.com/category/unit-testing/" title="View all posts filed under Unit Testing">Unit Testing</a>
+</li>
+	<li class="cat-item cat-item-20"><a href="http://blog.frontendforce.com/category/web-development/" title="View all posts filed under Web Development">Web Development</a>
+</li>
+		</ul>
+</div><div class="sidebarTitle"><p>Archives</p></div><div class="sidebarMenu">		<ul>
+			<li><a href='http://blog.frontendforce.com/2010/06/' title='June 2010'>June 2010</a></li>
+	<li><a href='http://blog.frontendforce.com/2010/05/' title='May 2010'>May 2010</a></li>
+	<li><a href='http://blog.frontendforce.com/2010/04/' title='April 2010'>April 2010</a></li>
+	<li><a href='http://blog.frontendforce.com/2010/03/' title='March 2010'>March 2010</a></li>
+		</ul>
+</div>            <div class="sidebarTitle">
+              <p>Search</p>
+            </div>
+            <div class="sidebarMenu">
+                <form class="searchform" method="get" action="http://blog.frontendforce.com"> 
+                <input class="input search" name="s" type="text" value="" /> 
+                <input type="submit" name="searchButton" value="Search" id="searchButton"  />
+                <!--END #searchform--> 
+                </form>
+            </div>
+		</div>
+
+</div>
+    <!--footer-->
+    <div id="footer">
+      <div id="footerMenu">
+        <ul>
+          <li><a href="http://blog.frontendforce.com/">Blog</a>&nbsp; |</li>
+          <li><a href="http://frontendforce.com/">Services</a>&nbsp; |</li>    
+          <li><a href="http://frontendforce.com/contact">Contact</a>&nbsp; |</li>
+          <li><a href="http://blog.frontendforce.com/wp-admin/">Log in</a></li>
+        </ul>
+      </div>
+      <span id="footerText">&copy; Blog created by <a href="http://sher.pl">sher.pl</a></span></div>
+  </div>
+</div>
+</body>
+</html>
